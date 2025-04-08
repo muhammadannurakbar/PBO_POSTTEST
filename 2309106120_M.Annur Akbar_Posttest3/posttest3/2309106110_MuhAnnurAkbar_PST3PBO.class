@@ -1,0 +1,153 @@
+// Source code is decompiled from a .class file using FernFlower decompiler.
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Scanner;
+
+public class SistemPeminjamanUMKM {
+   private static ArrayList<Peminjaman> daftarPeminjaman = new ArrayList();
+   private static int nextId = 1;
+   private static Scanner scanner;
+
+   public SistemPeminjamanUMKM() {
+   }
+
+   public static void main(String[] var0) {
+      while(true) {
+         System.out.println("\n=== Sistem Peminjaman Uang untuk UMKM ===");
+         System.out.println("1. Tambah Peminjaman");
+         System.out.println("2. Lihat Daftar Peminjaman");
+         System.out.println("3. Update Peminjaman");
+         System.out.println("4. Hapus Peminjaman");
+         System.out.println("5. Keluar");
+         System.out.print("Pilih menu: ");
+         int var1 = scanner.nextInt();
+         scanner.nextLine();
+         switch (var1) {
+            case 1:
+               tambahPeminjaman();
+               break;
+            case 2:
+               lihatDaftarPeminjaman();
+               break;
+            case 3:
+               updatePeminjaman();
+               break;
+            case 4:
+               hapusPeminjaman();
+               break;
+            case 5:
+               System.out.println("Terima kasih telah menggunakan sistem peminjaman uang untuk UMKM.");
+               return;
+            default:
+               System.out.println("Pilihan tidak valid. Silakan coba lagi.");
+         }
+      }
+   }
+
+   private static void tambahPeminjaman() {
+      System.out.print("Masukkan Nama UMKM: ");
+      String var0 = scanner.nextLine();
+      System.out.print("Masukkan Jumlah Pinjaman (tanpa titik/koma): ");
+      long var1 = scanner.nextLong();
+      scanner.nextLine();
+      System.out.print("Masukkan Tanggal Pinjaman (dd/mm/yyyy): ");
+      String var3 = scanner.nextLine();
+      System.out.println("Pilih Jenis Peminjaman:");
+      System.out.println("1. Modal Kerja");
+      System.out.println("2. Investasi");
+      System.out.print("Pilihan: ");
+      int var4 = scanner.nextInt();
+      scanner.nextLine();
+      Object var5;
+      String var6;
+      if (var4 == 1) {
+         System.out.print("Masukkan Kebutuhan Modal Kerja: ");
+         var6 = scanner.nextLine();
+         var5 = new PeminjamanModalKerja(nextId++, var0, var1, var3, var6);
+      } else {
+         if (var4 != 2) {
+            System.out.println("Jenis tidak valid. Membatalkan input.");
+            return;
+         }
+
+         System.out.print("Masukkan Jenis Investasi: ");
+         var6 = scanner.nextLine();
+         var5 = new PeminjamanInvestasi(nextId++, var0, var1, var3, var6);
+      }
+
+      daftarPeminjaman.add(var5);
+      System.out.println("Peminjaman berhasil ditambahkan.");
+      ((Peminjaman)var5).displayInfo();
+   }
+
+   private static void lihatDaftarPeminjaman() {
+      if (daftarPeminjaman.isEmpty()) {
+         System.out.println("Tidak ada data peminjaman.");
+      } else {
+         Iterator var0 = daftarPeminjaman.iterator();
+
+         while(var0.hasNext()) {
+            Peminjaman var1 = (Peminjaman)var0.next();
+            System.out.println(var1);
+         }
+      }
+
+   }
+
+   private static void updatePeminjaman() {
+      System.out.print("Masukkan ID Peminjaman yang akan diupdate: ");
+      int var0 = scanner.nextInt();
+      scanner.nextLine();
+      Peminjaman var1 = cariPeminjamanById(var0);
+      if (var1 == null) {
+         System.out.println("Peminjaman dengan ID " + var0 + " tidak ditemukan.");
+      } else {
+         System.out.print("Masukkan Nama UMKM baru: ");
+         String var2 = scanner.nextLine();
+         System.out.print("Masukkan Jumlah Pinjaman baru: ");
+         long var3 = scanner.nextLong();
+         scanner.nextLine();
+         System.out.print("Masukkan Tanggal Pinjaman baru (dd/mm/yyyy): ");
+         String var5 = scanner.nextLine();
+         System.out.print("Masukkan Status Pinjaman (Aktif/Lunas): ");
+         String var6 = scanner.nextLine();
+         var1.setNamaUMKM(var2);
+         var1.setJumlahPinjaman(var3);
+         var1.setTanggalPinjaman(var5);
+         var1.setStatusPinjaman(var6);
+         System.out.println("Peminjaman berhasil diupdate.");
+      }
+   }
+
+   private static void hapusPeminjaman() {
+      System.out.print("Masukkan ID Peminjaman yang akan dihapus: ");
+      int var0 = scanner.nextInt();
+      scanner.nextLine();
+      Peminjaman var1 = cariPeminjamanById(var0);
+      if (var1 == null) {
+         System.out.println("Peminjaman dengan ID " + var0 + " tidak ditemukan.");
+      } else {
+         daftarPeminjaman.remove(var1);
+         System.out.println("Peminjaman berhasil dihapus.");
+      }
+   }
+
+   private static Peminjaman cariPeminjamanById(int var0) {
+      Iterator var1 = daftarPeminjaman.iterator();
+
+      Peminjaman var2;
+      do {
+         if (!var1.hasNext()) {
+            return null;
+         }
+
+         var2 = (Peminjaman)var1.next();
+      } while(var2.getId() != var0);
+
+      return var2;
+   }
+
+   static {
+      scanner = new Scanner(System.in);
+   }
+}
